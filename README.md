@@ -107,6 +107,7 @@ SERVO4_FUNCTION = 36     # Motor4
 
 ### 취약점 1: MAVLink 미서명 통신
 - 대부분의 상용 드론이 MAVLink 서명을 **기본적으로 활성화하지 않음**
+- 실제 테스트 결과, 대부분의 드론이 **미서명 상태로 운용**되고 있어 즉시 주도권 획득이 가능
 - 서명이 없으면 누구나 MAVLink 메시지를 보내 드론을 제어할 수 있음
 
 ### 취약점 2: 서명 키 주입 가능
@@ -243,7 +244,9 @@ key_injection/
 │   └── mavlink_key_injection.py # 공격 코드 (PoC)
 ├── analysis/
 │   ├── firmware_analysis.md     # IDA Pro 펌웨어 분석 결과
-│   └── param_analysis.md        # 파라미터 설정 분석
+│   ├── param_analysis.md        # 파라미터 설정 분석
+│   ├── execution_log.md         # 실제 공격 실행 로그 및 결과 분석
+│   └── technical_notes.md       # 함수별 기술 상세 노트
 ├── docs/
 │   ├── attack_flow.md           # 공격 흐름 상세
 │   ├── vulnerability_report.md  # 취약점 보고서
@@ -265,6 +268,15 @@ key_injection/
 | **물리적 접근 제한** | 시리얼 텔레메트리 포트 보호 |
 | **통신 암호화** | MAVLink 메시지에 TLS/DTLS 적용 검토 |
 | **펌웨어 업데이트** | 최신 ArduPilot 버전으로 보안 패치 적용 |
+
+---
+
+## 🔔 주의사항
+
+### 다중 드론 환경
+- 여러 대의 드론이 동일 채널에 존재할 경우, **각 드론의 `SYSID_THISMAV` 값이 다르지 않으면** 공격이 의도하지 않은 드론에 전달될 수 있음
+- 공격 코드의 `TARGET_SYSTEM` 값을 대상 드론의 실제 시스템 ID와 정확히 일치시켜야 함
+- 테스트 환경에서는 반드시 **단일 드론** 또는 **고유 SYSID 설정**을 사용할 것
 
 ---
 

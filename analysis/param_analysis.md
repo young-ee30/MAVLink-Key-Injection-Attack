@@ -96,3 +96,32 @@
 ### ❌ Pre-Arm 체크 비활성화
 - `ARMING_CHECK=0`으로 설정되어 있어
 - GPS, 센서 등의 상태와 무관하게 ARM 가능
+
+---
+
+## 8. 공격 코드 검증 — Code Value vs Param Value
+
+공격 코드에서 설정 요청한 값과 `param.param` 파일의 기존 값을 비교한 결과:
+
+| Param | Code Value | Param Value | Status |
+|-------|-----------|-------------|--------|
+| `FRAME_CLASS` | 1 | 1.0 | ✔ 일치 |
+| `FRAME_TYPE` | 1 | 1.0 | ✔ 일치 |
+| `BRD_PWM_COUNT` | 4 | — | — (파일에 없음) |
+| `MOT_PWM_TYPE` | 0 | 0.0 | ✔ 일치 |
+| `SERVO1_FUNCTION` | 33 | 33.0 | ✔ 일치 |
+| `SERVO2_FUNCTION` | 34 | 34.0 | ✔ 일치 |
+| `SERVO3_FUNCTION` | 35 | 35.0 | ✔ 일치 |
+| `SERVO4_FUNCTION` | 36 | 36.0 | ✔ 일치 |
+| `BRD_SAFETYENABLE` | 0 | — | — (파일에 없음) |
+| `BRD_SAFETY_DEFLT` | 0 | 0.0 | ✔ 일치 |
+| `BRD_SAFETY_MASK` | 0 | 0.0 | ✔ 일치 |
+| `BRD_SAFETYOPTION` | 0 | 0.0 | ✔ 일치 |
+| `ARMING_CHECK` | 0 | 0.0 | ✔ 일치 |
+| `DISARM_DELAY` | 60 | 60.0 | ✔ 일치 |
+| `MOT_SPIN_ARM` | 0.1 | 0.1 | ✔ 일치 |
+| `RC_MAP_THROTTLE` | 3 | 3 | ✔ 일치 |
+
+> **분석 결과**: 공격 코드의 파라미터 설정값이 실제 드론 설정과 거의 모두 일치.  
+> `BRD_PWM_COUNT`와 `BRD_SAFETYENABLE`은 param 파일에 명시되어 있지 않으나,  
+> 코드 실행 시 기본값이 사용되며 정상 적용됨을 실행 로그에서 확인.
